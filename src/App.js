@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
+  // let [neww, setnew]=useState([])
   let [query, setQuery] = useState([])
   const [blogs, setBlogs] = useState(null);
   useEffect(()=>{
@@ -23,6 +24,17 @@ const handleClick = (name,id)=>{
   // console.log(query);
 }
 
+const handleDelete = (id)=>{
+  for(var i=0; i<query.length; i++){
+    console.warn(query);
+
+    if(query[i].id ===id){
+      query.splice(i,1)
+      console.log(query);
+      // setQuery(query)
+    }
+  }
+}
 
   return (
     <div className="App">
@@ -46,10 +58,17 @@ const handleClick = (name,id)=>{
                 <h2>Favourite</h2>
                 { query.map((que) => (
                   <div className="blog-preview" key={que.id}>
-                <p>{que.name} <span className="float-right point">-</span></p>
+                <p>{que.name} <span className="float-right point" onClick={()=>handleDelete(que.id)}>-</span></p>
                  </div>          
                  ))}
               </div>
+              {/* <div>
+              { neww.map((ele) => (
+                  <div className="blog-preview" key={ele.id}>
+                <p>{ele.name} </p>
+                 </div>          
+                 ))}
+              </div> */}
             </div>
           </div>
         </div>
