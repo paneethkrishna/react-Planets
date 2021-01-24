@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
-  // let [neww, setnew]=useState([])
   let [query, setQuery] = useState([])
   const [blogs, setBlogs] = useState(null);
   useEffect(()=>{
@@ -15,25 +14,19 @@ function App() {
     });
 },[])
 
-const handleClick = (name,id)=>{
-  // setQuery(name)
-  // console.log(query);
-  setQuery([...new Set(query), {
-    name,id
-  }])
-  // console.log(query);
+// Adds to fav on click
+const handleClick = (name)=>{
+  const fav = [...query]
+  fav.push(name)
+  setQuery([...new Set(fav)])
 }
 
+// Deletes from fav
 const handleDelete = (id)=>{
-  for(var i=0; i<query.length; i++){
-    console.warn(query);
-
-    if(query[i].id ===id){
-      query.splice(i,1)
-      console.log(query);
-      // setQuery(query)
-    }
-  }
+  const fav = [...query];
+  const idx = fav.findIndex((val) => val === id);
+  fav.splice(idx, 1);
+  setQuery(fav);
 }
 
   return (
@@ -45,7 +38,6 @@ const handleDelete = (id)=>{
               <div className="col">
                 <h2 className="text-center">
                   Planets
-                  
                 </h2>
                 <span className="text-grey">*click + to add to Favoutite</span>
                 { blogs && blogs.map((blog) => (
@@ -57,18 +49,11 @@ const handleDelete = (id)=>{
               <div className="col text-center">
                 <h2>Favourite</h2>
                 { query.map((que) => (
-                  <div className="blog-preview" key={que.id}>
-                <p>{que.name} <span className="float-right point" onClick={()=>handleDelete(que.id)}>-</span></p>
+                  <div className="blog-preview" key={que}>
+                <p>{que} <span className="float-right point" onClick={()=>handleDelete(que)}>-</span></p>
                  </div>          
                  ))}
               </div>
-              {/* <div>
-              { neww.map((ele) => (
-                  <div className="blog-preview" key={ele.id}>
-                <p>{ele.name} </p>
-                 </div>          
-                 ))}
-              </div> */}
             </div>
           </div>
         </div>
