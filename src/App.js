@@ -2,32 +2,41 @@ import { useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
-  let [query, setQuery] = useState([])
-  const [blogs, setBlogs] = useState(null);
-  useEffect(()=>{
+  const [planets, setPlanets] = useState([]);
+  useEffect(() => {
     fetch('https://assignment-machstatz.herokuapp.com/planet')
-    .then(res =>{
-       return res.json();
-    })
-    .then((data)=>{
-        setBlogs(data)
-    });
-},[])
+      .then(res => {
+        return res.json();
+      })
+      .then((data) => {
+        data.map(item => item.isFavourite = false);
+        setPlanets(data)
+      });
+  }, [])
 
-// Adds to fav on click
-const handleClick = (name)=>{
-  const fav = [...query]
-  fav.push(name)
-  setQuery([...new Set(fav)])
-}
+  // Adds to fav on click
+  const handleClick = (planet) => {
+    const planetsCopy = [...planets];
+    const item = planetsCopy.find((item) => item.id === planet.id);
+    item.isFavourite = true;
+    setPlanets(planetsCopy);
+  }
 
-// Deletes from fav
-const handleDelete = (id)=>{
-  const fav = [...query];
-  const idx = fav.findIndex((val) => val === id);
-  fav.splice(idx, 1);
-  setQuery(fav);
-}
+  // Deletes from fav
+  const handleDelete = (planet) => {
+    const planetsCopy = [...planets];
+    const item = planetsCopy.find((item) => item.id === planet.id);
+    item.isFavourite = false;
+    setPlanets(planetsCopy);
+  }
+
+  const getPlanets = () => {
+    return planets.filter((planet) => !planet.isFavourite);
+  }
+
+  const getFavorites = () => {
+    return planets.filter((planet) => planet.isFavourite);
+  }
 
   return (
     <div className="App">
@@ -39,20 +48,20 @@ const handleDelete = (id)=>{
                 <h2 className="text-center">
                   Planets
                 </h2>
-                <span className="text-grey">*click + to add to Favoutite</span>
-                { blogs && blogs.map((blog) => (
-                  <div className="blog-preview" key={blog.id}>
-                <p>{blog.name} <span className="float-right point" onClick={()=>handleClick(blog.name, blog.id)}>+</span></p>
-                 </div>          
-                 ))}
+                <span className="text-grey">*click + to add to Favourite</span>
+                {planets && getPlanets().map((result) => (
+                  <div className="blog-preview" key={result.id}>
+                    <p>{result.name} <span className="float-right point" onClick={() => handleClick(result)}>+</span></p>
+                  </div>
+                ))}
               </div>
               <div className="col text-center">
                 <h2>Favourite</h2>
-                { query.map((que) => (
-                  <div className="blog-preview" key={que}>
-                <p>{que} <span className="float-right point" onClick={()=>handleDelete(que)}>-</span></p>
-                 </div>          
-                 ))}
+                {planets && getFavorites().map((fav) => (
+                  <div className="blog-preview" key={fav.id}>
+                    <p>{fav.name} <span className="float-right point" onClick={() => handleDelete(fav)}>-</span></p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
